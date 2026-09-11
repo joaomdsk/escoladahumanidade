@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cuidando do Corpo — Escola da Humanidade</title>
+  <link rel="stylesheet" href="Cuidando%20do%20Corpo%20%E2%80%94%20Escola%20da%20Humanidade_files/basecoat.cdn.min_HLUE.css">
+  <style>
+/* Skip artifact shell — fixed styles served beside every artifact.
+   Complements basecoat; artifacts override --accent for their own identity. */
+:root {
+  color-scheme: light dark;
+  --accent: #2563eb;
+  --accent-contrast: #ffffff;
+  --accent-text: color-mix(in srgb, var(--accent) 72%, #000);
+  --bg: #f8f9fb;
+  --surface: #ffffff;
+  --text: #14171f;
+  --text-muted: #5b6472;
+  --border: rgba(20, 23, 31, 0.10);
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(20, 23, 31, 0.08);
+  --space: 16px;
+}
+/* Theme resolution. Without data-theme the viewer's system preference decides,
+   as it always did. With it, the artifact's own choice wins in BOTH directions:
+   a page that hardcodes one palette must not be handed the opposite set of
+   tokens by the machine it happens to be opened on. The dark values appear
+   twice because a media query cannot be folded into a selector list.
+   The attribute sits inside :where() so these blocks keep the specificity of a
+   bare :root — the page's own <style> is linked after this file and must go on
+   overriding any token it wants, exactly as it could before. */
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
+    --bg: #101318;
+    --surface: #181c23;
+    --text: #eef1f6;
+    --text-muted: #9aa4b2;
+    --border: rgba(238, 241, 246, 0.12);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+}
+:root:where([data-theme="dark"]) {
+  color-scheme: dark;
+  --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
+  --bg: #101318;
+  --surface: #181c23;
+  --text: #eef1f6;
+  --text-muted: #9aa4b2;
+  --border: rgba(238, 241, 246, 0.12);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+:root:where([data-theme="light"]) { color-scheme: light; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+
+.shell-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.shell-section { padding: calc(var(--space) * 2) 0; }
+.shell-grid { display: grid; gap: var(--space); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.shell-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: var(--space); }
+.shell-footer { padding: 24px 0 40px; color: var(--text-muted); font-size: 13px; }
+
+.shell-hero { padding: calc(var(--space) * 3) 0 calc(var(--space) * 2); }
+.shell-hero h1 { font-size: clamp(26px, 4vw, 40px); line-height: 1.15; margin: 0 0 10px; text-wrap: balance; }
+.shell-hero p { color: var(--text-muted); max-width: 60ch; margin: 0; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space);
+}
+
+.kpi { display: flex; flex-direction: column; gap: 4px; }
+.kpi .kpi-value { font-size: 28px; font-weight: 650; line-height: 1.1; }
+.kpi .kpi-label { font-size: 13px; color: var(--text-muted); }
+.kpi .kpi-delta { font-size: 12.5px; font-weight: 600; }
+.kpi .kpi-delta.up { color: #0a8f3c; }
+.kpi .kpi-delta.down { color: #cf3131; }
+
+table.shell-table { border-collapse: collapse; width: 100%; font-size: 14px; }
+table.shell-table th {
+  text-align: left; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text-muted); font-weight: 600;
+}
+table.shell-table th, table.shell-table td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--border); }
+table.shell-table td.num, table.shell-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+
+.chart-box { width: 100%; min-height: 220px; }
+.chart-box svg { width: 100%; height: auto; display: block; }
+
+.muted { color: var(--text-muted); }
+.accent { color: var(--accent-text); }
+.shell-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-text);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .shell-fade { animation: shell-fade 400ms ease both; }
+  @keyframes shell-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+}
+
+</style>
+  
+  <style>
+    :root {
+      --accent: #1A56A0;
+      --accent-gold: #D4A843;
+      --accent-gold-dark: #9e7520;
+      --header-bg: #0F2D5E;
+      --header-text: #FFFFFF;
+      --heading-font: Georgia, Cambria, "Times New Roman", serif;
+      --body-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --accent: #D4A843;
+      --accent-gold: #E5BE64;
+      --accent-gold-dark: #f0cb75;
+      --header-bg: #091D3E;
+      --header-text: #FFFFFF;
+      --bg: #07152b;
+      --surface: #0e2243;
+      --border: #1d355f;
+      --text: #e6edfa;
+      --text-muted: #9bb1d3;
+    }
+
+    body {
+      font-family: var(--body-font);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      margin: 0;
+      scroll-behavior: smooth;
+    }
+
+    h1, h2, h3, h4, .brand-title {
+      font-family: var(--heading-font);
+      letter-spacing: -0.01em;
+      font-weight: 700;
+    }
+
+    /* Header e Navegação */
+    .eh-navbar {
+      background-color: var(--header-bg);
+      color: var(--header-text);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+      border-bottom: 2px solid var(--accent-gold);
+    }
+
+    .eh-nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0.65rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .eh-nav-left {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .eh-back-link {
+      color: var(--accent-gold);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      background: rgba(212, 168, 67, 0.12);
+      border: 1px solid rgba(212, 168, 67, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .eh-back-link:hover {
+      background: var(--accent-gold);
+      color: #091D3E;
+    }
+
+    .eh-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: #FFFFFF;
+    }
+
+    .eh-logo-img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid var(--accent-gold);
+      flex-shrink: 0;
+    }
+
+    .eh-brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .eh-brand-title {
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.1;
+      color: #FFFFFF;
+    }
+
+    .eh-brand-sub {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.75);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .eh-nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      overflow-x: auto;
+      padding: 0.2rem 0;
+      max-width: 100%;
+    }
+
+    .eh-nav-item {
+      color: rgba(255, 255, 255, 0.88);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .eh-nav-item:hover, .eh-nav-item.active {
+      color: var(--accent-gold);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .eh-theme-toggle {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #FFFFFF;
+      padding: 0.4rem 0.75rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .eh-theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    /* Hero Section */
+    .hero-container {
+      background: linear-gradient(180deg, rgba(15, 45, 94, 0.06) 0%, rgba(212, 168, 67, 0.05) 100%);
+      padding: 3.5rem 1.25rem 2.5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme="dark"] .hero-container {
+      background: linear-gradient(180deg, rgba(9, 29, 62, 0.85) 0%, rgba(6, 19, 41, 0.95) 100%);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      background: rgba(212, 168, 67, 0.16);
+      color: var(--accent-gold-dark);
+      border: 1px solid var(--accent-gold);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+
+    [data-theme="dark"] .hero-badge {
+      color: var(--accent-gold);
+    }
+
+    .hero-logo-wrapper {
+      margin-bottom: 1.5rem;
+      display: inline-block;
+      position: relative;
+    }
+
+    .hero-logo-img {
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      border: 3px solid var(--accent-gold);
+      box-shadow: 0 8px 24px rgba(26, 86, 160, 0.25);
+      background: #0F2D5E;
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      margin: 0.5rem 0 0.8rem;
+      color: var(--accent);
+      line-height: 1.15;
+    }
+
+    [data-theme="dark"] .hero-title {
+      color: #E6EDFA;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 760px;
+      margin: 0 auto 1.25rem;
+      font-weight: 500;
+    }
+
+    .hero-meta {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border-radius: 8px;
+      border: 1px dashed var(--border);
+    }
+
+    .hero-motto {
+      margin-top: 1.5rem;
+      font-family: var(--heading-font);
+      font-style: italic;
+      color: var(--accent-gold);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      font-size: 0.95rem;
+    }
+
+    /* Content Layout */
+    .content-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 4rem;
+    }
+
+    .study-section {
+      margin-bottom: 3.5rem;
+      scroll-margin-top: 5rem;
+    }
+
+    .section-header {
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.75rem;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .section-title {
+      font-size: 1.75rem;
+      margin: 0;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    [data-theme="dark"] .section-title {
+      color: var(--accent-gold);
+    }
+
+    .section-num {
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.85rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      font-family: var(--body-font);
+      font-weight: 700;
+    }
+
+    [data-theme="dark"] .section-num {
+      background: var(--accent-gold);
+      color: #091D3E;
+    }
+
+    /* Agenda Grid */
+    .agenda-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .agenda-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .agenda-card:hover {
+      border-color: var(--accent-gold);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.07);
+    }
+
+    .agenda-num {
+      color: var(--accent-gold);
+      font-weight: 700;
+      font-size: 1.1rem;
+      font-family: var(--heading-font);
+    }
+
+    .agenda-text {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .agenda-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Subsections and Cards */
+    .card-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    [data-theme="dark"] .card-title {
+      color: var(--accent-gold);
+    }
+
+    /* Callout & Highlights */
+    .concept-callout {
+      background: rgba(26, 86, 160, 0.05);
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.25rem 0;
+      font-size: 0.95rem;
+    }
+
+    [data-theme="dark"] .concept-callout {
+      background: rgba(212, 168, 67, 0.08);
+      border-left-color: var(--accent-gold);
+    }
+
+    .gold-box {
+      background: rgba(212, 168, 67, 0.08);
+      border: 1px solid rgba(212, 168, 67, 0.35);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 1.25rem 0;
+    }
+
+    .alert-cad {
+      background: #FFF3CD;
+      border: 2px solid #FFEEBA;
+      border-left: 6px solid #D39E00;
+      color: #664D03;
+      padding: 1.25rem 1.5rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+    }
+
+    [data-theme="dark"] .alert-cad {
+      background: #2D2207;
+      border: 2px solid #5C470E;
+      border-left: 6px solid #D4A843;
+      color: #F8E3A8;
+    }
+
+    .alert-medical {
+      background: rgba(186, 26, 26, 0.07);
+      border: 2px solid rgba(186, 26, 26, 0.3);
+      border-left: 6px solid #BA1A1A;
+      color: inherit;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 2rem 0;
+    }
+
+    /* Grids & Visual Comparison */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin: 1.25rem 0;
+    }
+
+    .compare-col {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+
+    .compare-col.positive {
+      border-top: 4px solid #198754;
+    }
+
+    .compare-col.negative {
+      border-top: 4px solid #dc3545;
+    }
+
+    .compare-col.neutral {
+      border-top: 4px solid var(--accent);
+    }
+
+    /* Mineral Grid */
+    .mineral-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .mineral-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.85rem;
+    }
+
+    .mineral-card strong {
+      color: var(--accent);
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    [data-theme="dark"] .mineral-card strong {
+      color: var(--accent-gold);
+    }
+
+    /* Interactive / Step Journey */
+    .timeline-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 1.25rem 0;
+      position: relative;
+    }
+
+    .timeline-step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      background: var(--surface);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .step-badge {
+      background: var(--accent-gold);
+      color: #091D3E;
+      font-weight: 700;
+      font-size: 0.9rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Diagram Pill Flow */
+    .flow-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1.25rem;
+      background: var(--bg);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      margin: 1.25rem 0;
+      font-weight: 600;
+    }
+
+    .flow-pill {
+      background: var(--accent);
+      color: #FFFFFF;
+      padding: 0.5rem 1rem;
+      border-radius: 24px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .flow-arrow {
+      color: var(--accent-gold);
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      margin: 1.25rem 0;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.92rem;
+    }
+
+    table.data-table th {
+      background: rgba(15, 45, 94, 0.08);
+      padding: 0.75rem 1rem;
+      font-weight: 700;
+      border-bottom: 2px solid var(--border);
+    }
+
+    [data-theme="dark"] table.data-table th {
+      background: rgba(212, 168, 67, 0.12);
+      color: var(--accent-gold);
+    }
+
+    table.data-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    table.data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Reference List */
+    .reference-list {
+      font-size: 0.9rem;
+      padding-left: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .reference-list li {
+      margin-bottom: 0.75rem;
+    }
+
+    /* Footer */
+    .eh-footer {
+      background: var(--header-bg);
+      color: #FFFFFF;
+      padding: 3rem 1.25rem 2rem;
+      border-top: 3px solid var(--accent-gold);
+      text-align: center;
+    }
+
+    .eh-footer-content {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .footer-logo {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 2px solid var(--accent-gold);
+    }
+
+    .footer-quote {
+      font-family: var(--heading-font);
+      font-size: 1.15rem;
+      color: #F0F4F8;
+      font-style: italic;
+    }
+
+    .footer-motto {
+      color: var(--accent-gold);
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+    }
+
+    .btn-circle {
+      background: var(--accent-gold);
+      color: #091D3E;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 0.65rem 1.4rem;
+      border-radius: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .btn-circle:hover {
+      background: #FFFFFF;
+      color: #091D3E;
+    }
+
+    .footer-disc {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 0.5rem;
+    }
+
+    /* Print styling */
+    @media print {
+      .eh-navbar, .eh-theme-toggle, .eh-back-link, .btn-circle {
+        display: none !important;
+      }
+      body {
+        background: #fff;
+        color: #000;
+      }
+      .card-block, .compare-col {
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR FIXA -->
+  <header class="eh-navbar">
+    <div class="eh-nav-container">
+      <div class="eh-nav-left">
+        <a href="https://skip-artifacts-snapshots.application.production.adapta.tools/user_3AuzIGaNWjUN35i38q9JaADF8O6/32fhyk62ohau5knni52n44vik4/revisions/ca27150b-abd8-4702-877d-23fd7c6aca0f/index.html" class="eh-back-link" title="Retornar à página principal da Escola">
+          <span>←</span> Voltar à Escola
+        </a>
+        <a href="#hero" class="eh-brand">
+          <!-- Logo oficial estilizado em SVG de alta fidelidade: Flor de lótus, estrela radiante de 8 pontas e geometria sagrada Flor da Vida sobre azul profundo com detalhes dourados -->
+          <svg class="eh-logo-img" viewBox="0 0 100 100" aria-label="Logo Oficial Escola da Humanidade">
+            <circle cx="50" cy="50" r="48" fill="#0F2D5E" stroke="#D4A843" stroke-width="2.5"></circle>
+            <!-- Geometria Flor da Vida sutil de fundo -->
+            <circle cx="50" cy="50" r="24" fill="none" stroke="#D4A843" stroke-width="0.8" stroke-opacity="0.35"></circle>
+            <circle cx="50" cy="26" r="24" fill="none" stroke="#D4A843" stroke-width="0.8" stroke-opacity="0.25"></circle>
+            <circle cx="50" cy="74" r="24" fill="none" stroke="#D4A843" stroke-width="0.8" stroke-opacity="0.25"></circle>
+            <circle cx="29" cy="38" r="24" fill="none" stroke="#D4A843" stroke-width="0.8" stroke-opacity="0.25"></circle>
+            <circle cx="71" cy="38" r="24" fill="none" stroke="#D4A843" stroke-width="0.8" stroke-opacity="0.25"></circle>
+            <!-- Pétalas do Lótus em Azul Celeste e Branco -->
+            <path d="M50 78 C35 70 30 52 50 34 C70 52 65 70 50 78 Z" fill="#FFFFFF" fill-opacity="0.95"></path>
+            <path d="M50 78 C25 68 20 48 35 38 C40 54 46 68 50 78 Z" fill="#1A56A0" fill-opacity="0.8"></path>
+            <path d="M50 78 C75 68 80 48 65 38 C60 54 54 68 50 78 Z" fill="#1A56A0" fill-opacity="0.8"></path>
+            <path d="M50 78 C15 62 14 42 26 35 C28 52 38 68 50 78 Z" fill="#D4A843" fill-opacity="0.6"></path>
+            <path d="M50 78 C85 62 86 42 74 35 C72 52 62 68 50 78 Z" fill="#D4A843" fill-opacity="0.6"></path>
+            <path d="M50 78 C42 66 40 50 50 42 C60 50 58 66 50 78 Z" fill="#D4A843" fill-opacity="0.9"></path>
+            <!-- Estrela radiante no topo -->
+            <path d="M50 14 L52.5 22 L60 22 L54 26.5 L56.5 34 L50 29.5 L43.5 34 L46 26.5 L40 22 L47.5 22 Z" fill="#D4A843"></path>
+            <circle cx="50" cy="24" r="2.5" fill="#FFFFFF"></circle>
+          </svg>
+          <div class="eh-brand-text">
+            <span class="eh-brand-title">Escola da Humanidade</span>
+            <span class="eh-brand-sub">Fé · Pureza · Sabedoria</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="eh-nav-menu" aria-label="Seções do Estudo">
+        <a href="#agenda" class="eh-nav-item">Agenda</a>
+        <a href="#cap1" class="eh-nav-item">1. Contexto</a>
+        <a href="#cap2" class="eh-nav-item">2. Saúde</a>
+        <a href="#cap3" class="eh-nav-item">3. Alimento</a>
+        <a href="#cap4" class="eh-nav-item">4. Doenças &amp; Metabolismo</a>
+        <a href="#cap5" class="eh-nav-item">5. Natureza</a>
+        <a href="#bonus" class="eh-nav-item">Bônus</a>
+        <a href="#referencias" class="eh-nav-item">Referências</a>
+      </nav>
+
+      <button id="themeToggle" class="eh-theme-toggle" type="button" aria-label="Alternar tema claro/escuro">
+        <span id="themeIcon">☀️</span>
+        <span id="themeLabel">Modo Claro</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="hero" class="hero-container">
+    <div class="hero-logo-wrapper">
+      <svg class="hero-logo-img" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="48" fill="#0F2D5E" stroke="#D4A843" stroke-width="3"></circle>
+        <circle cx="50" cy="50" r="30" fill="none" stroke="#D4A843" stroke-width="0.9" stroke-opacity="0.4"></circle>
+        <circle cx="50" cy="20" r="30" fill="none" stroke="#D4A843" stroke-width="0.9" stroke-opacity="0.3"></circle>
+        <circle cx="50" cy="80" r="30" fill="none" stroke="#D4A843" stroke-width="0.9" stroke-opacity="0.3"></circle>
+        <circle cx="24" cy="35" r="30" fill="none" stroke="#D4A843" stroke-width="0.9" stroke-opacity="0.3"></circle>
+        <circle cx="76" cy="35" r="30" fill="none" stroke="#D4A843" stroke-width="0.9" stroke-opacity="0.3"></circle>
+        <!-- Flor de Lótus Sagrada -->
+        <path d="M50 78 C35 70 30 52 50 34 C70 52 65 70 50 78 Z" fill="#FFFFFF" fill-opacity="0.95"></path>
+        <path d="M50 78 C25 68 20 48 35 38 C40 54 46 68 50 78 Z" fill="#1A56A0" fill-opacity="0.85"></path>
+        <path d="M50 78 C75 68 80 48 65 38 C60 54 54 68 50 78 Z" fill="#1A56A0" fill-opacity="0.85"></path>
+        <path d="M50 78 C15 62 14 42 26 35 C28 52 38 68 50 78 Z" fill="#D4A843" fill-opacity="0.75"></path>
+        <path d="M50 78 C85 62 86 42 74 35 C72 52 62 68 50 78 Z" fill="#D4A843" fill-opacity="0.75"></path>
+        <path d="M50 78 C42 66 40 50 50 42 C60 50 58 66 50 78 Z" fill="#D4A843"></path>
+        <!-- Estrela Guia Radiante -->
+        <path d="M50 11 L53 21 L62 21 L54.5 26.5 L57.5 36 L50 30.5 L42.5 36 L45.5 26.5 L38 21 L47 21 Z" fill="#D4A843"></path>
+        <circle cx="50" cy="23" r="3" fill="#FFFFFF"></circle>
+      </svg>
+    </div>
+    <div class="hero-badge">Conceitos Fundamentais · Item 1</div>
+    <h1 class="hero-title">Cuidando do Corpo</h1>
+    <p class="hero-subtitle">Módulo de Iniciação — Escola da Humanidade</p>
+    <div class="hero-meta">
+      Conteúdo estruturado com base no material de estudo <strong>"CUIDANDO DA SUA SAÚDE — Elevando o Nível de Consciência"</strong>, por <em>Marcus S. Klein</em>.
+    </div>
+    <div class="hero-motto">FÉ · PUREZA · SABEDORIA</div>
+  </section>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="content-wrap">
+
+    <!-- AVISO MÉDICO INICIAL DE SEGURANÇA -->
+    <div class="alert-cad" role="alert">
+      <strong>⚠️ AVISO IMPORTANTE:</strong> O conteúdo deste módulo é estritamente educacional e voltado à ampliação da consciência em saúde. Ele <strong>não substitui consulta, diagnóstico ou acompanhamento médico especializado</strong>. A dieta cetogênica é expressamente contraindicada para indivíduos com Diabetes Tipo 1 sem suporte estrito e usuários de insulina exógena devido ao risco potencial de cetoacidose diabética. Consulte sempre o seu médico assistente antes de qualquer modificação alimentar drástica.
+    </div>
+
+    <!-- 2. INTRODUÇÃO / AGENDA -->
+    <section id="agenda" class="study-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">0</span> Agenda &amp; Visão Geral do Módulo</h2>
+        <span class="text-muted">5 Capítulos Principais + Bônus</span>
+      </div>
+      <p>
+        Para compreender a biologia humana, precisamos alinhar três pilares fundamentais: nossa história evolutiva, nossa bioquímica metabólica e a lucidez espiritual em nossas escolhas diárias. Este módulo foi desenhado na seguinte sequência:
+      </p>
+
+      <div class="agenda-grid">
+        <a href="#cap1" class="agenda-card">
+          <span class="agenda-num">1.</span>
+          <span class="agenda-text">Contexto e Mentalidade</span>
+          <span class="agenda-desc">O Homo Sapiens nômade, escassez ancestral e a mentalidade "Caveman" (Paleo).</span>
+        </a>
+        <a href="#cap2" class="agenda-card">
+          <span class="agenda-num">2.</span>
+          <span class="agenda-text">Saúde do Ser Humano</span>
+          <span class="agenda-desc">Tríade Corpo-Mente-Alma, a balança Saboroso vs. Saudável e fundamentos fisiológicos.</span>
+        </a>
+        <a href="#cap3" class="agenda-card">
+          <span class="agenda-num">3.</span>
+          <span class="agenda-text">Alimento: Classificação Didática</span>
+          <span class="agenda-desc">Frutas, leguminosas, açúcares, gorduras e o inventário completo dos 17 minerais.</span>
+        </a>
+        <a href="#cap4" class="agenda-card">
+          <span class="agenda-num">4.</span>
+          <span class="agenda-text">Doenças de Fundo Alimentar &amp; Metabolismo</span>
+          <span class="agenda-desc">Diabetes (1, 2 e 3), Insulina, Jejum Intermitente, Autofagia e Cetose Desmistificada.</span>
+        </a>
+        <a href="#cap5" class="agenda-card">
+          <span class="agenda-num">5.</span>
+          <span class="agenda-text">Natureza Humana x Natureza</span>
+          <span class="agenda-desc">Evolução darwiniana, lições de Galápagos e o risco da estagnação moderna.</span>
+        </a>
+        <a href="#bonus" class="agenda-card">
+          <span class="agenda-num">BÔNUS</span>
+          <span class="agenda-text">Colesterol &amp; Sinais da Pele</span>
+          <span class="agenda-desc">O ciclo do colesterol, pele oleosa, deficiência de zinco, DHT e equilíbrio ômega 3 vs 6.</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 3. CAPÍTULO 1 — CONTEXTO E MENTALIDADE -->
+    <section id="cap1" class="study-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">1</span> Contexto e Mentalidade</h2>
+      </div>
+
+      <div class="card-block">
+        <h3 class="card-title">O Homo Sapiens como Ser Nômade e Caçador-Coletor</h3>
+        <p>
+          Durante mais de 99% da história da nossa espécie, o ser humano viveu como nômade caçador-coletor. Nossos ancestrais não possuíam geladeiras, prateleiras de supermercado ou refeições a cada 3 horas. A sobrevivência dependia da mobilidade contínua, da cooperação social e de um metabolismo adaptado a ciclos alternados de abundância esporádica e jejuns prolongados involuntários.
+        </p>
+        <p>
+          A busca pelo alimento exigia dispêndio calórico prévio: caminhar dezenas de quilômetros, rastrear presas, colher raízes fibrosas e frutos sazonais silvestres — infinitamente menos doces do que as frutas geneticamente modificadas de hoje. O corpo humano tornou-se uma máquina primorosa em <strong>armazenar energia na forma de triglicerídeos (gordura)</strong> durante períodos de caça bem-sucedida, para utilizá-la silenciosamente nos dias de escassez.
+        </p>
+
+        <div class="concept-callout">
+          <strong>A Mentalidade "Caveman" (Paleo):</strong><br>
+          Diante de qualquer escolha alimentar contemporânea, faça a si mesmo a pergunta ancestral: <em>"Um homem das cavernas reconheceria isso como comida? Isso existia na natureza em seu estado primário?"</em>. Se a resposta for não — se for algo refinado em laboratório, ultraprocessado, repleto de aditivos artificiais e açúcares isolados —, nosso código genético não foi forjado para processá-lo continuamente sem adoecer.
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. CAPÍTULO 2 — SAÚDE DO SER HUMANO -->
+    <section id="cap2" class="study-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">2</span> Saúde do Ser Humano</h2>
+      </div>
+
+      <!-- 2.1 Mente / Alma -->
+      <div class="card-block">
+        <h3 class="card-title">2.1 Mente e Alma: A Balança do Saboroso vs. Saudável</h3>
+        <p>
+          O corpo físico não é uma entidade isolada; ele é o templo da alma e o veículo de manifestação da mente. A verdadeira saúde repousa no equilíbrio dinâmico entre <strong>Corpo, Mente e Espírito</strong>.
+        </p>
+        <p>
+          O dilema cotidiano do ser humano moderno opera em uma constante balança interna:
+        </p>
+        <div class="compare-grid">
+          <div class="compare-col negative">
+            <h4 style="margin-top:0; color:#dc3545;">O "Saboroso" Hiperpalatável</h4>
+            <p>Alimentos carregados de açúcar, gorduras hidrogenadas e realçadores artificiais de sabor ativam o centro de recompensa dopaminérgico no cérebro. Produzem prazer imediato e efêmero, seguido de letargia, picos insulínicos, inflamação crônica e vício biológico.</p>
+          </div>
+          <div class="compare-col positive">
+            <h4 style="margin-top:0; color:#198754;">O "Saudável" Nutritivo</h4>
+            <p>Comida de verdade, rica em densidade de micronutrientes, proteínas nobres, gorduras naturais e fibras. Não hiperestimula de forma artificial o paladar, mas constrói vitalidade sustentada, clareza mental, estabilidade emocional e longevidade.</p>
+          </div>
+        </div>
+        <p>
+          Elevar o nível de consciência significa resgatar o discernimento para que o paladar seja educado pela sabedoria, e não dominado por compulsões bioquímicas inconscientes.
+        </p>
+      </div>
+
+      <!-- 2.2 Fisiologia -->
+      <div class="card-block">
+        <h3 class="card-title">2.2 Fundamentos Fisiológicos: Homeostase, Etiopatologia e Sintomatologia</h3>
+        <div class="compare-grid">
+          <div class="compare-col neutral">
+            <strong>Homeostase</strong>
+            <p>O estado dinâmico de equilíbrio auto-regulado do organismo interno (pH sanguíneo, glicemia, temperatura corporal, osmolaridade). É o objetivo supremo da inteligência biológica inata do corpo.</p>
+          </div>
+          <div class="compare-col neutral">
+            <strong>Etiopatologia</strong>
+            <p>O estudo das causas profundas (etiologia) e dos mecanismos de desenvolvimento (patogênese) das enfermidades. A medicina contemporânea muitas vezes foca nos efeitos sem sanar a raiz alimentar subjacente.</p>
+          </div>
+          <div class="compare-col neutral">
+            <strong>Sintomatologia</strong>
+            <p>O conjunto de manifestações perceptíveis (sintomas e sinais clínicos). O sintoma não é o inimigo; ele é o alerta que o organismo emite sinalizando que a homeostase foi rompida.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2.3 Metabolismo -->
+      <div class="card-block">
+        <h3 class="card-title">2.3 Metabolismo: Catabolismo, Anabolismo e Fontes de Energia</h3>
+        <p>
+          O metabolismo humano é a soma total de todas as reações químicas que mantêm a vida, operando em duas grandes vias coordenadas:
+        </p>
+        <ul>
+          <li><strong>Catabolismo:</strong> A quebra de moléculas complexas em estruturas mais simples para liberar energia (ex.: glicogenólise, lipólise, quebra de triglicerídeos em ácidos graxos, autofagia celular).</li>
+          <li><strong>Anabolismo:</strong> A síntese e construção de novos tecidos e reservas moleculares com consumo de energia (ex.: síntese proteica muscular, formação de glicogênio e lipogênese).</li>
+        </ul>
+        <p>
+          O corpo possui <strong>duas fontes primárias de combustível energético</strong>:
+        </p>
+        <ol>
+          <li><strong>Glicose:</strong> Proveniente dos carboidratos. Armazenada de forma finita no fígado e nos músculos sob a forma de glicogênio (~2.000 kcal de estoque). É o combustível de queima rápida.</li>
+          <li><strong>Gordura / Ácidos Graxos e Corpos Cetônicos:</strong> Proveniente das reservas adiposas e gorduras alimentares. Um reservatório quase inesgotável (tipicamente 40.000 a 100.000+ kcal no indivíduo médio). É a fonte de queima limpa e duradoura.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 5. CAPÍTULO 3 — ALIMENTO -->
+    <section id="cap3" class="study-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">3</span> Alimento: Classificação Didática</h2>
+      </div>
+
+      <div class="card-block">
+        <h3 class="card-title">Distinções Anatômicas e Nutricionais Cruciais</h3>
+        <p>
+          Para fazer escolhas conscientes, é imperativo desmistificar conceitos botânicos e nutricionais que frequentemente induzem o público ao erro:
+        </p>
+
+        <div class="compare-grid">
+          <div class="compare-col neutral">
+            <strong>Frutas x Fruts x Pseudofrutas</strong>
+            <p>Frutas botânicas contêm sementes originadas do ovário da flor. No entanto, muitas frutas modernas foram selecionadas artificialmente para conter taxas altíssimas de frutose pura ("bombas de açúcar"). O termo <em>fruts</em> ou pseudofrutas abrange estruturas carnosas onde a parte comestível não se origina exclusivamente do ovário (como o caju e a maçã).</p>
+          </div>
+          <div class="compare-col neutral">
+            <strong>Leguminosas x Oleaginosas</strong>
+            <p><strong>Leguminosas:</strong> Feijões, lentilhas, grão-de-bico, soja e amendoim. Ricas em amido, proteínas vegetais e antinutrientes (ácido fítico, lectinas). Requerem remolho e cozimento.<br><strong>Oleaginosas:</strong> Nozes, castanhas, amêndoas, macadâmias. Ricas em lipídios saudáveis e baixo carboidrato líquido.</p>
+          </div>
+          <div class="compare-col neutral">
+            <strong>Verduras x Folhas</strong>
+            <p>Folhas verdes escuras (espinafre, couve, rúcula, alface, agrião) são as campeãs de densidade nutricional: baixíssimo índice glicêmico, abundância de fibras solúveis e insolúveis, magnésio e clorofila, sem inflamar o pâncreas.</p>
+          </div>
+          <div class="compare-col neutral">
+            <strong>Açúcares x Amidos</strong>
+            <p>Ambos são carboidratos. Os açúcares simples (glicose, frutose, sacarose) elevam a glicemia de forma explosiva. Os amidos são cadeias longas de glicose (polissacarídeos) que, embora demorem um pouco mais, também são desdobrados 100% em glicose no intestino.</p>
+          </div>
+          <div class="compare-col neutral">
+            <strong>Gorduras Saturadas x Insaturadas</strong>
+            <p><strong>Saturadas:</strong> Moléculas estáveis sem duplas ligações químicas (manteiga, banha, coco). Resistentes ao calor e à oxidação.<br><strong>Insaturadas:</strong> Monoinsaturadas (azeite de oliva, abacate) e Poli-insaturadas (ômega 3 e ômega 6). Devem ser consumidas de fontes naturais e não industriais.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Minerais -->
+      <div class="card-block">
+        <h3 class="card-title">Macrominerais &amp; Microminerais: O Catálogo dos 17 Minerais Vitais</h3>
+        <p>
+          Os minerais atuam como catalisadores enzimáticos de todas as reações biológicas. Sem minerais, vitaminas não funcionam e o equilíbrio eletrolítico celular desmorona.
+        </p>
+
+        <h4 style="color:var(--accent); margin-top:1.5rem;">Microminerais (Oligoelementos necessários em miligramas ou microgramas):</h4>
+        <div class="mineral-grid">
+          <div class="mineral-card">
+            <strong>1. Ferro (Fe)</strong>
+            Transporte de oxigênio na hemoglobina e mioglobina celular.
+          </div>
+          <div class="mineral-card">
+            <strong>2. Cobre (Cu)</strong>
+            Síntese de colágeno, absorção de ferro e proteção oxidativa.
+          </div>
+          <div class="mineral-card">
+            <strong>3. Zinco (Zn)</strong>
+            Imunidade, síntese de testosterona, cicatrização e saúde cutânea.
+          </div>
+          <div class="mineral-card">
+            <strong>4. Cromo (Cr)</strong>
+            Potencializa a ação da insulina e melhora a captação de glicose.
+          </div>
+          <div class="mineral-card">
+            <strong>5. Iodo (I)</strong>
+            Componente estrutural indispensável dos hormônios tireoidianos T3 e T4.
+          </div>
+          <div class="mineral-card">
+            <strong>6. Manganês (Mn)</strong>
+            Ativação enzimática mitocondrial (superóxido dismutase) e ossos.
+          </div>
+          <div class="mineral-card">
+            <strong>7. Selênio (Se)</strong>
+            Potente antioxidante (glutationa peroxidase) e conversão de T4 em T3.
+          </div>
+          <div class="mineral-card">
+            <strong>8. Cobalto (Co)</strong>
+            Átomo central na estrutura da vitamina B12 (cobalamina).
+          </div>
+          <div class="mineral-card">
+            <strong>9. Molibdênio (Mo)</strong>
+            Cofator para quebra de sulfetos e metabolização de purinas.
+          </div>
+          <div class="mineral-card">
+            <strong>10. Flúor (F)</strong>
+            Mineralização esquelética e do esmalte dentário em doses fisiológicas.
+          </div>
+        </div>
+
+        <h4 style="color:var(--accent); margin-top:1.75rem;">Macrominerais (Necessários em quantidades expressivas no dia a dia):</h4>
+        <div class="mineral-grid">
+          <div class="mineral-card">
+            <strong>11. Cálcio (Ca)</strong>
+            Estrutura óssea, contração muscular cardíaca e sinalização celular.
+          </div>
+          <div class="mineral-card">
+            <strong>12. Cloreto (Cl)</strong>
+            Produção de ácido clorídrico gástrico (HCl) e balanço osmótico.
+          </div>
+          <div class="mineral-card">
+            <strong>13. Magnésio (Mg)</strong>
+            Mais de 300 reações enzimáticas, síntese de ATP, relaxamento muscular e do SNC.
+          </div>
+          <div class="mineral-card">
+            <strong>14. Fósforo (P)</strong>
+            Estrutura de fosfolipídios de membrana celular e molécula de ATP.
+          </div>
+          <div class="mineral-card">
+            <strong>15. Potássio (K)</strong>
+            Principal cátion intracelular, bomba de Na+/K+, pressão arterial e relaxamento vascular.
+          </div>
+          <div class="mineral-card">
+            <strong>16. Sódio (Na)</strong>
+            Principal cátion extracelular, condução nervosa, hidratação e volume plasmático.
+          </div>
+          <div class="mineral-card">
+            <strong>17. Enxofre (S)</strong>
+            Presente em aminoácidos sulfurados (cisteína, metionina) e desintoxicação hepática.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. CAPÍTULO 4 — DOENÇAS DE FUNDO ALIMENTAR & METABOLISMO -->
+    <section id="cap4" class="study-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">4</span> Doenças de Fundo Alimentar &amp; Metabolismo</h2>
+      </div>
+
+      <!-- 4.1 Diabetes Mellitus -->
+      <div class="card-block">
+        <h3 class="card-title">4.1 Diabetes Mellitus: Tipos 1, 2 e 3 (Alzheimer)</h3>
+        <p>
+          O modelo médico tradicional frequentemente encara o diabetes tipo 2 como uma doença crônica e progressiva incontrolável. No entanto, a visão moderna liderada por autores como o <strong>Dr. Jason Fung</strong> (autor de <em>The Obesity Code</em> e <em>The Diabetes Code</em>) demonstra que o Diabetes Tipo 2 é primariamente uma <strong>doença de toxicidade por hiperinsulinemia crônica e resistência à insulina</strong>.
+        </p>
+
+        <div class="compare-grid">
+          <div class="compare-col neutral">
+            <strong>Diabetes Tipo 1 (DM1)</strong>
+            <p>Doença autoimune em que os linfócitos destroem as células beta do pâncreas. Há ausência absoluta de insulina endógena. Requer insulinoterapia substitutiva vitalícia.</p>
+          </div>
+          <div class="compare-col neutral">
+            <strong>Diabetes Tipo 2 (DM2)</strong>
+            <p>Doença metabólica induzida pelo excesso crônico de carboidratos e calorias. O pâncreas produz insulina em excesso, mas as células se tornam "saturadas" e resistentes a ela. É plenamente reversível na imensa maioria dos casos.</p>
+          </div>
+          <div class="compare-col neutral">
+            <strong>Diabetes Tipo 3 (DM3 - Alzheimer)</strong>
+            <p>Termo cunhado por neurocientistas para a resistência à insulina no tecido cerebral. Os neurônios perdem a capacidade de captar glicose eficientemente, gerando perda sináptica, neuroinflamação e placas beta-amiloides.</p>
+          </div>
+        </div>
+
+        <div class="flow-diagram">
+          <span class="flow-pill">Dieta Rica em Açúcar &amp; Carbos</span>
+          <span class="flow-arrow">➔</span>
+          <span class="flow-pill">Hiperinsulinemia Silenciosa</span>
+          <span class="flow-arrow">➔</span>
+          <span class="flow-pill">Resistência à Insulina</span>
+          <span class="flow-arrow">➔</span>
+          <span class="flow-pill">Pré-Diabetes</span>
+          <span class="flow-arrow">➔</span>
+          <span class="flow-pill">Diabetes Tipo 2</span>
+          <span class="flow-arrow">➔</span>
+          <span class="flow-pill">Falência Pancreática / DM3</span>
+        </div>
+      </div>
+
+      <!-- 4.2 Revertendo o DM2 e os 3 Pilares -->
+      <div class="card-block">
+        <h3 class="card-title">4.2 Revertendo o Diabetes Tipo 2: Os 3 Pilares Fundamentais</h3>
+        <p>
+          O Dr. Jason Fung estabeleceu as bases biológicas para reverter o DM2: se o problema fundamental é o excesso de glicose e de insulina no organismo, a solução não pode ser injetar mais insulina num corpo que já está transbordando dela. A solução é <strong>esvaziar o reservatório</strong> através de 3 pilares:
+        </p>
+
+        <div class="timeline-steps">
+          <div class="timeline-step">
+            <div class="step-badge">1º</div>
+            <div>
+              <strong>Entender o Papel Central da Insulina:</strong>
+              <p style="margin:0.25rem 0 0;">A insulina é o hormônio mestre do armazenamento de energia. Enquanto a insulina estiver elevada no sangue, a queima de gordura (lipólise) está bioquimicamente bloqueada. Baixar os níveis basais de insulina é a chave mestra.</p>
+            </div>
+          </div>
+          <div class="timeline-step">
+            <div class="step-badge">2º</div>
+            <div>
+              <strong>Dieta Low Carb / Cetogênica:</strong>
+              <p style="margin:0.25rem 0 0;">Cortar drasticamente os carboidratos refinados e amidos remove o combustível que força o pâncreas a secretar jatos contínuos de insulina. O corpo passa a queimar lipídios.</p>
+            </div>
+          </div>
+          <div class="timeline-step">
+            <div class="step-badge">3º</div>
+            <div>
+              <strong>Jejum Intermitente (JI):</strong>
+              <p style="margin:0.25rem 0 0;">Ao não ingerir alimento por períodos planejados, a demanda por insulina cai a níveis basais mínimos. O corpo esvazia os estoques de glicogênio hepático e passa a consumir a própria gordura visceral.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-diagram">
+          <span class="flow-pill">Alimentação Low Carb</span>
+          <span class="flow-arrow">+</span>
+          <span class="flow-pill">Jejum Intermitente</span>
+          <span class="flow-arrow">➔</span>
+          <span class="flow-pill" style="background:var(--accent-gold); color:#091D3E;">Reduza a Demanda por Insulina</span>
+          <span class="flow-arrow">➔</span>
+          <span class="flow-pill">Reversão da Resistência</span>
+        </div>
+      </div>
+
+      <!-- CETOACIDOSE DIABÉTICA DESMISTIFICANDO -->
+      <div class="card-block">
+        <h3 class="card-title">Cetoacidose Diabética (CAD) — Desmistificando e Diferenciando da Cetose Nutricional</h3>
+        <p>
+          Existe enorme confusão conceitual entre <strong>Cetose Nutricional Fisiológica</strong> e a temida complicação médica chamada <strong>Cetoacidose Diabética (CAD)</strong>.
+        </p>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Parâmetro</th>
+                <th>Cetose Nutricional (Dieta Keto / Jejum)</th>
+                <th>Cetoacidose Diabética (CAD) — Emergência</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Glicemia</strong></td>
+                <td>Normal ou baixa (70 a 95 mg/dL)</td>
+                <td>Extremamente alta (&gt; 250 a 300+ mg/dL)</td>
+              </tr>
+              <tr>
+                <td><strong>Corpos Cetônicos</strong></td>
+                <td>Fisiológicos (0.5 a 3.0 mmol/L)</td>
+                <td>Altíssimos e descontrolados (&gt; 3.0 a 15+ mmol/L)</td>
+              </tr>
+              <tr>
+                <td><strong>pH Sanguíneo</strong></td>
+                <td>Totalmente normal (7.35 a 7.45)</td>
+                <td>Gravemente ácido (&lt; 7.30 / &lt; 7.20)</td>
+              </tr>
+              <tr>
+                <td><strong>Níveis de Insulina</strong></td>
+                <td>Presente em níveis basais reguladores</td>
+                <td>Quase zero ou nula (geralmente DM1)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="alert-cad">
+          <h4 style="margin-top:0; color:inherit;">Contraindicação Formal e Riscos:</h4>
+          A dieta cetogênica é <strong>contraindicada para diabéticos tipo 1 e pessoas em uso descontrolado de insulina</strong> sem rigorosa supervisão médica, devido ao perigo de descompensação acidótica rápida quando a dosagem de insulina exógena for mal calculada.
+        </div>
+
+        <p><strong>Causas Comuns da Cetoacidose Diabética:</strong> Diabetes DM1 ainda não diagnosticado, omissão ou dose insuficiente de insulina prescrita, infecções agudas graves (pneumonias, sepse, infecções urinárias), infarto ou acidentes vasculares que elevam abruptamente os hormônios de estresse (cortisol e adrenalina).</p>
+
+        <p><strong>Sinais e Sintomas Clínicos da CAD:</strong> Sede intensa e incontrolável (polidipsia), boca extremamente seca, aumento acentuado da micção (poliúria), hiperglicemia severa, hálito cetônico característico (odor de maçã estragada/acetona), náuseas, vômitos e dor abdominal intensa, respiração rápida e profunda de Kussmaul, fadiga extrema e confusão mental.</p>
+
+        <p><strong>Prevenção e Tratamento:</strong> Educação continuada do paciente diabético, adesão estrita ao esquema insulínico, aferição de glicose e cetonas na urina/sangue. O tratamento hospitalar de urgência requer hidratação venosa vigorosa, reposição criteriosa de eletrólitos (potássio) e infusão contínua de insulina sob vigilância em UTI.</p>
+      </div>
+
+      <!-- AÇÚCARES ESCONDIDOS -->
+      <div class="card-block">
+        <h3 class="card-title">Açúcares Escondidos na Dieta Moderna</h3>
+        <p>
+          A indústria alimentar adiciona açúcares em produtos supostamente "saudáveis" ou salgados para gerar vício gustativo e estender o prazo de validade:
+        </p>
+
+        <div class="compare-grid">
+          <div class="compare-col negative">
+            <strong>Falsos Amigos Diários</strong>
+            <p>Ketchup, molhos de mostarda industrializados, barras de cereais "fitness", granola comercial, passas e frutas desidratadas concentradas, água de coco de caixinha, sucos naturais engarrafados (frutose líquida sem fibras intactas), iogurtes com sabor, xaropes de milho ricos em frutose (HFCS), maltodextrina e dextrose em temperos prontos.</p>
+          </div>
+          <div class="compare-col negative">
+            <strong>Açúcares sob Outros Nomes</strong>
+            <p>Mel puro, xarope de agave, açúcar de cana, açúcar de coco, açúcar de beterraba, açúcar orgânico, mascavo e demerara. Todos elevam a glicose sanguínea de forma praticamente idêntica à do açúcar branco comum.</p>
+          </div>
+        </div>
+        <p><em>Legenda dos Macronutrientes:</em> <strong>G</strong> = Gordura | <strong>P</strong> = Proteína | <strong>C</strong> = Carboidrato.</p>
+      </div>
+
+      <!-- CARBOIDRATOS & ÍNDICE INSULINÊMICO -->
+      <div class="card-block">
+        <h3 class="card-title">Carboidratos: Estrutura e Impacto Glicêmico</h3>
+        <p>
+          Os carboidratos são compostos de sacarídeos. Classificam-se em monossacarídeos (glicose, frutose, galactose), dissacarídeos (sacarose, lactose, maltose) e polissacarídeos (amidos como batata, mandioca, milho, arroz e trigo). As <strong>fibras alimentares</strong> são frações de carboidratos vegetais que o intestino humano não digere, não convertendo-se em glicose.
+        </p>
+
+        <div class="gold-box">
+          <strong>Cálculo do Carboidrato Líquido (Net Carbs):</strong><br>
+          <code>Net Carbs = Carboidratos Totais - Fibras Alimentares</code><br>
+          Para reverter esteatose hepática, resistência insulínica e diabetes, o alvo prático de Net Carbs diários deve ser mantido entre <strong>20g a 50g por dia</strong>.
+        </div>
+
+        <h4 style="color:var(--accent); margin-top:1.5rem;">Impacto dos Macronutrientes na Glicemia e Insulina:</h4>
+        <div class="compare-grid">
+          <div class="compare-col negative">
+            <strong>Carboidratos: Alto Impacto</strong>
+            <p>90% a 100% convertem-se diretamente em glicose sanguínea. Provocam pico glicêmico súbito entre 15 minutos e 2 horas após a ingestão.</p>
+          </div>
+          <div class="compare-col neutral">
+            <strong>Proteínas: Impacto Moderado</strong>
+            <p>Aproximadamente 50% pode ser convertido em glicose por gliconeogênese hepática conforme a demanda corporal, gerando curva suave entre 2 e 4 horas.</p>
+          </div>
+          <div class="compare-col positive">
+            <strong>Gorduras: Impacto Quase Nulo</strong>
+            <p>Apenas cerca de 10% (porção de glicerol) pode converter-se em glicose. Liberação calórica lenta e contínua ao longo de 8 a 10 horas, sem deflagrar picos de insulina.</p>
+          </div>
+        </div>
+
+        <h4 style="color:var(--accent); margin-top:1.5rem;">Índice Insulinêmico: O Que Você Não Deve Comer em Excesso</h4>
+        <p>Alguns alimentos deflagram picos insulínicos elevados mesmo sem possuir altas cargas de carboidratos, como certos derivados do leite e suplementos:</p>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Alimento</th>
+                <th>Índice Insulinêmico Relativo</th>
+                <th>Recomendação Prática</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>WHEY Protein Isolado</strong></td><td>70 – 95</td><td>Rápida absorção de aminoácidos estimula pico agudo de insulina.</td></tr>
+              <tr><td><strong>Bacalhau</strong></td><td>59</td><td>Consumir com azeite de oliva e saladas fibrosas.</td></tr>
+              <tr><td><strong>Couve-flor</strong></td><td>49</td><td>Excelente opção fibrosa de baixo impacto glicêmico geral.</td></tr>
+              <tr><td><strong>Queijos maturados / Iogurte integral</strong></td><td>45</td><td>Moderar porções; preferir versões curadas e gordas.</td></tr>
+              <tr><td><strong>Brócolis</strong></td><td>28</td><td>Altamente protetor e anti-inflamatório.</td></tr>
+              <tr><td><strong>Atum sólido</strong></td><td>22</td><td>Excelente fonte de proteína magra e micronutrientes.</td></tr>
+              <tr><td><strong>Amendoim / Oleaginosas</strong></td><td>20</td><td>Baixa demanda de insulina (atenção a alérgenos e excessos calóricos).</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- GORDURAS BOAS VS RUINS -->
+      <div class="card-block">
+        <h3 class="card-title">Gorduras: Boas vs. Inflamatórias</h3>
+        <p>A demonização das gorduras na década de 1970 foi um dos maiores equívocos da saúde pública. O corpo necessita de ácidos graxos essenciais para compor a membrana de cada neurônio e produzir hormônios esteróides.</p>
+
+        <div class="compare-grid">
+          <div class="compare-col positive">
+            <h4 style="margin-top:0; color:#198754;">Gorduras Boas (Estáveis e Saudáveis)</h4>
+            <ul>
+              <li>Azeite de oliva extravirgem (ácido oleico e polifenóis)</li>
+              <li>Manteiga de verdade e Ghee (ácido butírico anti-inflamatório)</li>
+              <li>Óleo de fígado de bacalhau (rico em vitaminas A e D e Ômega 3 DHA/EPA)</li>
+              <li>Óleo e leite de coco prensado a frio (Triglicerídeos de Cadeia Média - TCM)</li>
+              <li>Óleo de abacate prensado a frio</li>
+              <li>Creme de leite fresco sem espessantes industriais</li>
+              <li>Banha de porco caipira / toucinho não industrializado</li>
+            </ul>
+          </div>
+          <div class="compare-col negative">
+            <h4 style="margin-top:0; color:#dc3545;">Gorduras Ruins e Inflamatórias</h4>
+            <ul>
+              <li>Óleos vegetais refinados de sementes (soja, milho, canola, algodão, girassol)</li>
+              <li>Gorduras trans e óleos hidrogenados industriais</li>
+              <li>Maioneses ultraprocessadas de supermercado</li>
+              <li>Molhos prontos de salada comerciais</li>
+              <li>Excesso desmedido de Ômega 6 oxidado em frituras comerciais</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROTEÍNAS E AMINOÁCIDOS -->
+      <div class="card-block">
+        <h3 class="card-title">Proteínas e Aminoácidos</h3>
+        <p>
+          As proteínas são polímeros de <strong>aminoácidos</strong> ligados por pontes peptídicas. Elas constituem os blocos de construção dos músculos, ossos, anticorpos, enzimas e neurotransmissores.
+        </p>
+        <p>
+          Dos mais de 20 aminoácidos utilizados na biologia humana, <strong>10 são classificados como essenciais</strong> (devem ser obrigatoriamente obtidos na dieta alimentar, pois o organismo é incapaz de sintetizá-los). Carnes de animais criados a pasto (<em>grass fed / grass finished</em>) e ovos caipiras possuem perfil completo de aminoácidos com altíssima biodisponibilidade, promovendo grande saciedade e com baixa indução patológica de insulina.
+        </p>
+      </div>
+
+      <!-- FRUTAS: O QUE SABER E METABOLISMO DA FRUTOSE -->
+      <div class="card-block">
+        <h3 class="card-title">Frutas: O Que Saber e Como Consumir</h3>
+        <p>
+          Ao contrário da glicose, que pode ser metabolizada por quase todas as células do corpo, <strong>a frutose livre é metabolizada quase exclusivamente pelo fígado</strong>. Quando ingerida em grande volume sob a forma de sucos concentrados ou frutas hiperdoces modernas, o fígado transforma o excedente de frutose diretamente em triglicerídeos através da lipogênese <em>de novo</em>, originando esteatose hepática (gordura no fígado) e ácido úrico elevado.
+        </p>
+        <div class="compare-grid">
+          <div class="compare-col positive">
+            <strong>Frutas Recomendadas (Baixo Açúcar e Ricas em Fibras/Gorduras)</strong>
+            <p>Coco seco, abacate, frutas vermelhas (mirtilos, morangos, amoras, framboesas), limão, lima, maracujá puro, banana verde (amido resistente para microbiota) e goiaba verde.</p>
+          </div>
+          <div class="compare-col negative">
+            <strong>Frutas Hiperglicemiantes (Moderar ou Evitar em DM2)</strong>
+            <p>Manga doce, melancia, banana madura, uvas sem semente e suco de laranja coado. Trate-as como sobremesas raras, nunca como fontes de hidratação.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- POR QUE NÃO CONTAR CALORIAS (JASON FUNG) -->
+      <div class="card-block">
+        <h3 class="card-title">Por Que Não Contar Calorias: A Visão do Dr. Jason Fung</h3>
+        <p>
+          O paradigma redutivo do <em>"Calorias que entram vs. Calorias que saem"</em> (CICO) falha porque assume que o corpo humano é um calorímetro inanimado. Se você consome 2.000 kcal de carboidratos refinados, o pâncreas dispara insulina em abundância, forçando a energia para os adipócitos e gerando fome logo em seguida.
+        </p>
+        <p>
+          Se você consome as mesmas 2.000 kcal na forma de proteínas, folhas e gorduras saudáveis, a resposta hormonal é totalmente diferente:
+        </p>
+        <ul>
+          <li><strong>Colecistocinina (CCK) &amp; Peptídeo YY (PYY):</strong> Hormônios de saciedade sacral liberados no intestino quando há presença de gorduras e proteínas, desligando o apetite.</li>
+          <li><strong>Leptina:</strong> Sinaliza ao cérebro que o tanque energético está abastecido.</li>
+          <li><strong>mTOR:</strong> Regulado pela abundância proteica para regeneração celular sadia, sem hipertrofiar reservas de gordura visceral.</li>
+        </ul>
+        <p><em>Conclusão do Dr. Fung:</em> O ganho de peso e o diabetes são <strong>doenças hormonais mediadas pela insulina</strong>, não meros desequilíbrios na contagem matemática de calorias.</p>
+      </div>
+
+      <!-- O TERCEIRO PILAR: JEJUM INTERMITENTE -->
+      <div class="card-block">
+        <h3 class="card-title">Jejum: O Terceiro Pilar da Cura Metabólica</h3>
+        <p>
+          O jejum não é inanição. Inanição é a ausência forçada e involuntária de alimento que consome tecidos magros vitais. O <strong>Jejum Intermitente (JI)</strong> é a abstenção controlada e deliberada de ingestão calórica em períodos determinados, permitindo que o corpo transite da fase digestiva (absortiva) para a fase de auto-limpeza e queima das reservas internas.
+        </p>
+
+        <h4 style="color:var(--accent); margin-top:1.25rem;">Benefícios Cientificamente Comprovados do Jejum Intermitente:</h4>
+        <div class="compare-grid">
+          <div class="compare-col positive">
+            <strong>1. Pico de Hormônio do Crescimento (GH)</strong>
+            <p>Aumenta em até 2.000% em homens e 1.300% em mulheres durante jejuns prolongados, protegendo a massa muscular esquelética e a densidade óssea.</p>
+          </div>
+          <div class="compare-col positive">
+            <strong>2. Normalização da Insulina e Glicemia</strong>
+            <p>Esvaziamento do glicogênio hepático e sensibilização profunda dos receptores celulares periféricos de insulina.</p>
+          </div>
+          <div class="compare-col positive">
+            <strong>3. Ativação Plena da Autofagia</strong>
+            <p>O prêmio Nobel de Fisiologia Yoshinori Ohsumi demonstrou o mecanismo celular de "autofagia" (autoconsumo de lixo celular, organelas oxidadas e proteínas defeituosas).</p>
+          </div>
+          <div class="compare-col positive">
+            <strong>4. Clareza Mental e Produção de BDNF</strong>
+            <p>Fator Neurotrófico Derivado do Cérebro (BDNF) é elevado, estimulando novas conexões neurais e neuroproteção contra demências.</p>
+          </div>
+        </div>
+
+        <h4 style="color:var(--accent); margin-top:1.5rem;">A Jornada Progressiva do Jejum:</h4>
+        <div class="flow-diagram">
+          <span class="flow-pill">Iniciante: 10h a 12h</span>
+          <span class="flow-arrow">➔</span>
+          <span class="flow-pill">Amador: 13h a 16h</span>
+          <span class="flow-arrow">➔</span>
+          <span class="flow-pill">Intermediário: 17h a 20h</span>
+          <span class="flow-arrow">➔</span>
+          <span class="flow-pill">OMAD: 21h a 24h</span>
+          <span class="flow-arrow">➔</span>
+          <span class="flow-pill" style="background:var(--accent-gold); color:#091D3E;">Prolongado: 36h a 72h</span>
+        </div>
+
+        <p><strong>O que você pode consumir durante o jejum:</strong> Água mineral pura, água com limão espremido (sem açúcar nem adoçantes químicos), café preto puro sem açúcar, chás de ervas puras (camomila, hortelã, chá verde), água com pitadas de sal integral/eletrólitos e, em jejuns mais longos, caldo de ossos caseiro ou caldo de legumes ralo.</p>
+
+        <div class="concept-callout">
+          <strong>Alerta Rigoroso sobre Adoçantes:</strong> Adoçantes artificiais como Aspartame, Sucralose e Sacarina ativam a fase cefálica da insulina — seu cérebro sente o sabor doce na língua e instrui o pâncreas a secretar insulina preventivamente, quebrando os benefícios hormonais do jejum. Se for utilizar esporadicamente fora do jejum, restrinja-se a Stevia 100% pura ou Eritritol.
+        </div>
+
+        <h4 style="color:var(--accent); margin-top:1.5rem;">Como Quebrar o Jejum Adequadamente</h4>
+        <p>
+          Jamais quebre um jejum de 16h a 24h+ com pizzas, massas ou refeições hiperglicêmicas copiosas. Comece de forma leve: caldos, dois ovos cozidos, um pedaço pequeno de peixe ou carne magra com algumas folhas verdes. Aguarde de 1 a 1,5 hora para que os sucos digestivos e enzimas intestinais sejam reativados antes de realizar uma refeição completa substancial.
+        </p>
+
+        <h4 style="color:var(--accent); margin-top:1.5rem;">OMAD — One Meal A Day (Uma Refeição por Dia)</h4>
+        <p>
+          Protocolo em que o indivíduo concentra sua nutrição diária em uma janela de 1 a 2 horas, acumulando aproximadamente 22 a 24 horas de jejum diário. A refeição deve ser densa em nutrientes, proteínas de alto valor biológico e gorduras saudáveis para garantir o aporte necessário. Há também o protocolo <em>OMEOD (One Meal Every Other Day)</em>, que estende o ciclo para 48 horas de intervalo entre refeições principais.
+        </p>
+      </div>
+
+      <!-- DM1, MONITORAMENTO CONTÍNUO E CGM -->
+      <div class="card-block">
+        <h3 class="card-title">A Chave para o Sucesso Glicêmico: Monitoramento Contínuo (CGM)</h3>
+        <p>
+          Tanto para quem convive com DM1 quanto para indivíduos em reversão de DM2, o monitoramento contínuo de glicose intersticial (CGM) revolucionou a medicina personalizada:
+        </p>
+        <ul>
+          <li><strong>FreeStyle Libre (Abbott):</strong> Sensor aplicado no braço que mede a glicose no líquido intersticial continuamente, com duração de 14 dias. Permite identificar como cada alimento individual impacta o seu corpo.</li>
+          <li><strong>Transmissores complementares (MiaoMiao / Blucon):</strong> Dispositivos acoplados ao Libre para emitir alertas automáticos em tempo real no smartphone para hiper e hipoglicemia.</li>
+          <li><strong>FreeStyle Libre 2 e 3:</strong> Versões atualizadas com transmissão contínua via Bluetooth sem necessidade de escaneamento manual ativo.</li>
+        </ul>
+      </div>
+
+      <!-- A CIÊNCIA POR TRÁS DO LOW CARB E CORPOS CETÔNICOS -->
+      <div class="card-block">
+        <h3 class="card-title">A Ciência por Trás do Low Carb e o Papel dos Corpos Cetônicos</h3>
+        <p>
+          Ao restringirmos os carboidratos, o fígado esgota suas reservas de glicogênio e começa a oxidar ácidos graxos em grande escala. Desse processo mitocondrial nascem os <strong>corpos cetônicos</strong>: acetoacetato, beta-hidroxibutirato (BHB) e acetona.
+        </p>
+        <div class="flow-diagram">
+          <span class="flow-pill">Dieta Convencional: Carbos ➔ Glicose ➔ Insulina Alta ➔ Inflamação &amp; Gordura</span>
+        </div>
+        <div class="flow-diagram">
+          <span class="flow-pill" style="background:#198754;">Caminho Cetogênico: Gordura ➔ Ácidos Graxos ➔ Corpos Cetônicos ➔ Energia Limpa</span>
+        </div>
+        <p>
+          Os corpos cetônicos não são apenas combustível; são moléculas de sinalização epigenética que suprimem a via de inflamação NLRP3, reduzem radicais livres no cérebro e melhoram a eficiência cardíaca em até 28%.
+        </p>
+
+        <h4 style="color:var(--accent); margin-top:1.5rem;">A "Fórmula Mágica": Cetogênica + Jejum Intermitente (Dr. Eric Berg)</h4>
+        <p>
+          O Dr. Eric Berg sintetiza que a maior aceleração de cura da síndrome metabólica ocorre ao unirmos a <strong>dieta cetogênica saudável (20g a 30g de NetCarbs/dia) com jejum intermitente habitual (idealmente 18 horas diárias)</strong>. Essa sinergia força o organismo a desligar a resistência periférica à insulina e regenerar os tecidos hepáticos infiltrados de gordura.
+        </p>
+      </div>
+
+      <!-- EXERCÍCIOS FÍSICOS E DIABETES -->
+      <div class="card-block">
+        <h3 class="card-title">Exercícios Físicos: Qual o Melhor para o Controle Glicêmico?</h3>
+        <p>
+          A contração muscular possui um mecanismo único e fascinante: ela é capaz de recrutar os transportadores de glicose <strong>GLUT4</strong> para a membrana celular <em>independentemente da presença de insulina</em>. O exercício atua, portanto, como uma insulina natural livre de efeitos colaterais.
+        </p>
+        <div class="compare-grid">
+          <div class="compare-col positive">
+            <strong>Exercícios de Baixo Impacto (Aeróbicos Leves / Caminhada / Yoga)</strong>
+            <p>Consomem primariamente glicose circulante de forma suave. Uma caminhada de 20 a 30 minutos logo após as principais refeições diminui o pico glicêmico pós-prandial em até 40%.</p>
+          </div>
+          <div class="compare-col positive">
+            <strong>Exercícios de Alto Impacto (Musculação / HIIT / Anaeróbicos)</strong>
+            <p>Podem gerar elevação passageira da glicemia durante o treino por liberação de adrenalina e cortisol de luta ou fuga. Todavia, aumentam a massa magra esquelética — o maior "ralo" corporal para estocar glicose a médio e longo prazo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. CAPÍTULO 5 — NATUREZA HUMANA X NATUREZA -->
+    <section id="cap5" class="study-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">5</span> Natureza Humana x Natureza</h2>
+      </div>
+
+      <div class="card-block">
+        <h3 class="card-title">Evolução Darwiniana, Lições de Galápagos e a Estagnação Moderna</h3>
+        <p>
+          Em sua seminal viagem ao arquipélago de Galápagos a bordo do HMS Beagle, <strong>Charles Darwin</strong> observou como a seleção natural moldava cada bico de tentilhão e cada carapaça de tartaruga gigante para se harmonizar perfeitamente com os recursos específicos e as exigências do ambiente circundante. O naturalista <strong>David Attenborough</strong> retratou com maestria essas lições ao longo de suas célebres produções: a natureza recompensa a plasticidade, o esforço biológico e a integridade sistêmica.
+        </p>
+        <p>
+          No entanto, o ser humano do século XXI caiu em uma armadilha evolutiva inédita: criamos um microambiente artificial de conforto extremo, hipercalórico, sedentário, climatizado e saturado de estímulos virtuais. Rompemos a conexão com os ciclos de luz solar (ritmo circadiano), com os alimentos sazonais da terra e com o esforço muscular que nos forjou por milênios.
+        </p>
+        <div class="concept-callout">
+          <strong>A Ilusão da Estagnação Humana:</strong><br>
+          Acreditamos que dominamos a natureza porque temos tecnologias digitais, mas esquecemos que nossa fisiologia continua 100% biológica. A estagnação física e espiritual nos adoece. Cuidar do corpo na Escola da Humanidade não é uma busca vaidosa por estética externa superficial, mas sim o resgate da harmonia com a Lei Natural e o cultivo de um vaso límpido para o desabrochar da consciência.
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. BÔNUS: COLESTEROL & SINAIS DA PELE -->
+    <section id="bonus" class="study-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">Bônus</span> Colesterol &amp; Sinais da Pele</h2>
+      </div>
+
+      <!-- Colesterol -->
+      <div class="card-block">
+        <h3 class="card-title">O Ciclo do Colesterol: Amigo e Não Inimigo</h3>
+        <p>
+          O colesterol é tão vital para a sobrevivência humana que cerca de 80% do colesterol circulante é produzido pelo próprio fígado humano todos os dias, independentemente da ingestão dietética. Sem colesterol, não existiria vitamina D3, hormônios sexuais (estrogênio, progesterona, testosterona), sais biliares para digerir gorduras nem integridade das membranas celulares.
+        </p>
+        <p>
+          O problema cardiovascular não reside no número absoluto de colesterol total, mas na <strong>oxidação e glicação das partículas de LDL pequenas e densas</strong>, provocadas pelo excesso crônico de açúcares, óleos vegetais de sementes e inflamação endotelial sistêmica. O colesterol dirige-se à parede arterial como um "bombeiro" tentando fechar uma fissura inflamada causada pelo açúcar refinado e toxinas.
+        </p>
+      </div>
+
+      <!-- Sinais da Pele -->
+      <div class="card-block">
+        <h3 class="card-title">O Que a Pele nos Diz Sobre o Que Comemos (ou Deixamos de Comer)</h3>
+        <p>
+          A pele é o espelho visível do nosso trato gastrointestinal e do nosso equilíbrio hormonal interno:
+        </p>
+
+        <div class="compare-grid">
+          <div class="compare-col neutral">
+            <strong>Pele Excessivamente Oleosa &amp; Acne</strong>
+            <p>Hiperinsulinemia crônica provocada por dietas ricas em carboidratos estimula a produção desordenada de hormônios andrógenos nas adrenais e ovários/testículos. O excesso de insulina converte testosterona em <strong>DHT (Di-hidrotestosterona)</strong> através da enzima 5-alfa redutase, resultando em hiperatividade das glândulas sebáceas e queda capilar androgênica.</p>
+          </div>
+          <div class="compare-col neutral">
+            <strong>Deficiência de Zinco &amp; Hipogonadismo</strong>
+            <p>O zinco é co-fator indispensável para o controle da enzima aromatase e para a cicatrização dérmica. Sua carência gera unhas quebradiças com manchas esbranquiçadas, dermatites resistentes e diminuição da produção saudável de testosterona.</p>
+          </div>
+          <div class="compare-col neutral">
+            <strong>Pele Seca, Áspera e Escamosa</strong>
+            <p>Frequentemente sinaliza sobrecarga e lentificação das vias de desintoxicação hepática, estagnação da bile ou um grave desequilíbrio na proporção entre <strong>Ômega 6 e Ômega 3</strong>.</p>
+          </div>
+        </div>
+
+        <div class="gold-box">
+          <strong>Ajustando o Balanço Ômega 6 x Ômega 3:</strong><br>
+          A dieta ocidental moderna consome uma proporção desastrosa de 20:1 a 30:1 de ômega 6 pró-inflamatório (óleos industriais de soja, milho, canola, excesso de amendoim e ultraprocessados). Para restaurar a hidratação dérmica e a saúde vascular, essa proporção deve aproximar-se de 3:1 ou 1:1 através do consumo de <strong>sardinhas frescas, salmão selvagem e óleo de fígado de bacalhau</strong> rico em DHA/EPA.
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. REFERÊNCIAS BIBLIOGRÁFICAS -->
+    <section id="referencias" class="study-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">Ref</span> Referências Bibliográficas &amp; Científicas</h2>
+      </div>
+
+      <div class="card-block">
+        <ul class="reference-list">
+          <li><strong>GOMEZ-ARBELAEZ, D. et al.</strong> <em>Acid-base safety during the course of a very low-calorie-ketogenic diet.</em> Endocrine, v. 58, n. 1, p. 81-90, Oct 2017.</li>
+          <li><strong>HUSSAIN, T. A. et al.</strong> <em>Effect of low-calorie versus low-carbohydrate ketogenic diet in type 2 diabetes.</em> Nutrition, v. 28, n. 10, p. 1016-21, Oct 2012.</li>
+          <li><strong>VIEIRA, Suzana (Dra.).</strong> <em>Dieta cetogênica provoca cetoacidose?</em> Artigo médico e revisão fisiológica, 2017.</li>
+          <li><strong>FUNG, Jason (MD).</strong> <em>The Obesity Code: Unlocking the Secrets of Weight Loss</em> &amp; <em>The Diabetes Code: Prevent and Reverse Type 2 Diabetes Naturally.</em> Greystone Books.</li>
+          <li><strong>BERG, Eric (DC).</strong> <em>The Healthy Keto Plan &amp; Intermittent Fasting protocols.</em> KB Publishing.</li>
+          <li><strong>DAHL-JØRGENSEN, Knut.</strong> <em>Environmental triggers, viral hypotheses, and immune interventions in early-stage Type 1 Diabetes.</em></li>
+          <li><strong>DEMETERCO, Carla; LEVINE, Fred.</strong> <em>Gene therapy and beta-cell regeneration for endocrine pancreatic disorders.</em> Evolving Antibody and Cellular Therapies.</li>
+          <li><strong>KLEIN, Marcus S.</strong> <em>Cuidando da Sua Saúde — Elevando o Nível de Consciência.</em> Texto base original do Módulo de Iniciação da Escola da Humanidade.</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- RODAPÉ OFICIAL DA ESCOLA DA HUMANIDADE -->
+  <footer class="eh-footer">
+    <div class="eh-footer-content">
+      <svg class="footer-logo" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="48" fill="#091D3E" stroke="#D4A843" stroke-width="2.5"></circle>
+        <circle cx="50" cy="50" r="26" fill="none" stroke="#D4A843" stroke-width="0.8" stroke-opacity="0.3"></circle>
+        <path d="M50 78 C35 70 30 52 50 34 C70 52 65 70 50 78 Z" fill="#FFFFFF" fill-opacity="0.95"></path>
+        <path d="M50 78 C25 68 20 48 35 38 C40 54 46 68 50 78 Z" fill="#1A56A0" fill-opacity="0.85"></path>
+        <path d="M50 78 C75 68 80 48 65 38 C60 54 54 68 50 78 Z" fill="#1A56A0" fill-opacity="0.85"></path>
+        <path d="M50 78 C42 66 40 50 50 42 C60 50 58 66 50 78 Z" fill="#D4A843"></path>
+        <path d="M50 14 L52.5 22 L60 22 L54 26.5 L56.5 34 L50 29.5 L43.5 34 L46 26.5 L40 22 L47.5 22 Z" fill="#D4A843"></path>
+      </svg>
+
+      <div class="footer-quote">
+        "A Escola da Humanidade é um lar digital para a evolução da consciência."
+      </div>
+      <div class="footer-motto">FÉ · PUREZA · SABEDORIA</div>
+
+      <div>
+        <a href="https://escola-da-humanidade.circle.so/" target="_blank" rel="noopener noreferrer" class="btn-circle">
+          <span>Comunidade no Circle</span> ➔
+        </a>
+      </div>
+
+      <p class="footer-disc">
+        Todo o conhecimento compartilhado é construído com discernimento, investigação científica e amor à verdade — livre de dogmas cegos.
+      </p>
+    </div>
+  </footer>
+
+  <!-- SCRIPT DE TEMA E INTERATIVIDADE -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const themeLabel = document.getElementById('themeLabel');
+      const htmlEl = document.documentElement;
+
+      // Recupera tema salvo ou preferência
+      const savedTheme = localStorage.getItem('eh_theme') || 'light';
+      applyTheme(savedTheme);
+
+      function applyTheme(theme) {
+        htmlEl.setAttribute('data-theme', theme);
+        localStorage.setItem('eh_theme', theme);
+        if (theme === 'dark') {
+          themeIcon.textContent = '🌙';
+          themeLabel.textContent = 'Modo Noturno';
+        } else {
+          themeIcon.textContent = '☀️';
+          themeLabel.textContent = 'Modo Claro';
+        }
+      }
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = htmlEl.getAttribute('data-theme');
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        applyTheme(nextTheme);
+      });
+
+      // Destaque de link de navegação conforme o scroll
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('.eh-nav-item');
+
+      window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop - 120;
+          if (pageYOffset >= sectionTop) {
+            current = section.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${current}`) {
+            link.classList.add('active');
+          }
+        });
+      }, { passive: true });
+    });
+  </script>
+<script>
+/* Skip artifact shell — fixed helpers served beside every artifact. */
+(function () {
+  "use strict";
+
+  var fmt = {
+    num: function (v, opts) { return new Intl.NumberFormat("pt-BR", opts || {}).format(v); },
+    brl: function (v) { return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v); },
+    pct: function (v) { return new Intl.NumberFormat("pt-BR", { style: "percent", maximumFractionDigits: 1 }).format(v); }
+  };
+
+  // axisFmt keeps axis tick labels short (compact notation) so long values
+  // (e.g. full BRL amounts) never clip against the plot edge.
+  function axisFmt(v) {
+    return fmt.num(v, { notation: "compact", maximumFractionDigits: 1 });
+  }
+
+  // format accepts a function OR one of the fmt names ("num" | "brl" | "pct").
+  function coerceFormat(spec) {
+    if (typeof spec === "function") return spec;
+    if (typeof spec === "string" && fmt[spec]) return fmt[spec];
+    return function (v) { return fmt.num(v); };
+  }
+
+  function accent() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#2563eb";
+  }
+  function mutedColor() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--text-muted").trim() || "#5b6472";
+  }
+  function svgEl(tag, attrs) {
+    var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  function frame(el, w, h) {
+    var svg = svgEl("svg", { viewBox: "0 0 " + w + " " + h, role: "img" });
+    el.innerHTML = "";
+    el.appendChild(svg);
+    return svg;
+  }
+
+  // maxOf guards the axis scale: empty values would give -Infinity (truthy,
+  // so "|| 1" can't catch it) and a non-positive max would flip the chart.
+  function maxOf(values) {
+    var m = values.length ? Math.max.apply(null, values) : 0;
+    return m > 0 ? m : 1;
+  }
+
+  // bar(el, {labels:[], values:[], color?, format?}) — vertical bar chart.
+  function bar(el, cfg) {
+    var W = 640, H = 280, padL = 46, padB = 30, padT = 12;
+    var svg = frame(el, W, H);
+    var max = maxOf(cfg.values);
+    var n = cfg.values.length;
+    var plotW = W - padL - 12, plotH = H - padT - padB;
+    var step = plotW / n, bw = Math.min(step * 0.62, 64);
+    var color = cfg.color || accent();
+    var f = coerceFormat(cfg.format);
+    for (var g = 0; g <= 4; g++) {
+      var gy = padT + plotH - (plotH * g) / 4;
+      svg.appendChild(svgEl("line", { x1: padL, y1: gy, x2: W - 12, y2: gy, stroke: "currentColor", "stroke-opacity": 0.08 }));
+      var lbl = svgEl("text", { x: padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10, fill: mutedColor() });
+      lbl.textContent = axisFmt((max * g) / 4);
+      svg.appendChild(lbl);
+    }
+    cfg.values.forEach(function (v, i) {
+      var bh = Math.max(0, (v / max) * plotH);
+      var x = padL + i * step + (step - bw) / 2;
+      var y = padT + plotH - bh;
+      var r = svgEl("rect", { x: x, y: y, width: bw, height: bh, rx: 4, fill: color });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + f(v);
+      r.appendChild(t);
+      svg.appendChild(r);
+      var tx = svgEl("text", { x: x + bw / 2, y: H - 10, "text-anchor": "middle", "font-size": 11, fill: mutedColor() });
+      tx.textContent = cfg.labels[i];
+      svg.appendChild(tx);
+    });
+  }
+
+  // line(el, {labels:[], values:[], color?, format?}) — single-series line.
+  function line(el, cfg) {
+    var W = 640, H = 280, padL = 46, padB = 30, padT = 12;
+    var svg = frame(el, W, H);
+    var max = maxOf(cfg.values);
+    var n = cfg.values.length;
+    var plotW = W - padL - 16, plotH = H - padT - padB;
+    var color = cfg.color || accent();
+    var f = coerceFormat(cfg.format);
+    for (var g = 0; g <= 4; g++) {
+      var gy = padT + plotH - (plotH * g) / 4;
+      svg.appendChild(svgEl("line", { x1: padL, y1: gy, x2: W - 16, y2: gy, stroke: "currentColor", "stroke-opacity": 0.08 }));
+      var lbl = svgEl("text", { x: padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10, fill: mutedColor() });
+      lbl.textContent = axisFmt((max * g) / 4);
+      svg.appendChild(lbl);
+    }
+    var pts = cfg.values.map(function (v, i) {
+      var x = padL + (n === 1 ? plotW / 2 : (plotW * i) / (n - 1));
+      var y = padT + plotH - (v / max) * plotH;
+      return [x, y];
+    });
+    var d = pts.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
+    svg.appendChild(svgEl("path", { d: d, fill: "none", stroke: color, "stroke-width": 2, "stroke-linejoin": "round" }));
+    pts.forEach(function (p, i) {
+      var c = svgEl("circle", { cx: p[0], cy: p[1], r: 3.5, fill: color });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + f(cfg.values[i]);
+      c.appendChild(t);
+      svg.appendChild(c);
+      var tx = svgEl("text", { x: p[0], y: H - 10, "text-anchor": "middle", "font-size": 11, fill: mutedColor() });
+      tx.textContent = cfg.labels[i];
+      svg.appendChild(tx);
+    });
+  }
+
+  // donut(el, {labels:[], values:[], colors?}) — donut with center total.
+  function donut(el, cfg) {
+    var W = 320, H = 280, cx = W / 2, cy = H / 2, R = 92, r = 58;
+    var svg = frame(el, W, H);
+    var total = cfg.values.reduce(function (a, b) { return a + b; }, 0) || 1;
+    var palette = cfg.colors || [accent(), "#1baf7a", "#eda100", "#e34948", "#4a3aa7", "#e87ba4"];
+    var a0 = -Math.PI / 2;
+    cfg.values.forEach(function (v, i) {
+      var a1 = a0 + (v / total) * Math.PI * 2;
+      var large = a1 - a0 > Math.PI ? 1 : 0;
+      var p = ["M", cx + R * Math.cos(a0), cy + R * Math.sin(a0),
+        "A", R, R, 0, large, 1, cx + R * Math.cos(a1), cy + R * Math.sin(a1),
+        "L", cx + r * Math.cos(a1), cy + r * Math.sin(a1),
+        "A", r, r, 0, large, 0, cx + r * Math.cos(a0), cy + r * Math.sin(a0), "Z"].join(" ");
+      var path = svgEl("path", { d: p, fill: palette[i % palette.length] });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + fmt.num(v) + " (" + fmt.pct(v / total) + ")";
+      path.appendChild(t);
+      svg.appendChild(path);
+      a0 = a1;
+    });
+    var center = svgEl("text", { x: cx, y: cy + 5, "text-anchor": "middle", "font-size": 20, "font-weight": 650, fill: "currentColor" });
+    center.textContent = fmt.num(total);
+    svg.appendChild(center);
+  }
+
+  window.skipShell = { fmt: fmt };
+  window.skipChart = { bar: bar, line: line, donut: donut };
+})();
+
+</script>
+
+
+</body></html>
